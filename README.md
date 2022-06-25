@@ -2,7 +2,7 @@
 
 A [Raycast](https://www.raycast.com/) Extension to show live information about the battery in your Mac.
 
-![screnshot](assets/screenshot.png)
+![screnshot](metadata/screenshot-01.png)
 
 ## Contribution
 

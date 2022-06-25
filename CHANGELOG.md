@@ -1,3 +1,5 @@
-# macOS Battery Health Check Changelog
+# Battery Health Check Changelog
 
-## [Initial Version] - 2022-06-25
+## [Add Battery Health Check] - 2022-06-25
+
+Initial version code
