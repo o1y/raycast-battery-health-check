@@ -24,7 +24,7 @@ To start the development mode with hot reloading simply run the dev script. Rayc
 npm run dev
 ```
 
-#### Lint and prettify
+### Lint and prettify
 
 If you would like to open a PR, please run the linter and prettify your code:
 
