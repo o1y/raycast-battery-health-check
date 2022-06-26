@@ -22,6 +22,10 @@ const sections: SectionItem[] = [
   },
   {
     id: 3,
+    title: "Health Management",
+  },
+  {
+    id: 4,
     title: "Power Adapter",
   },
 ];
@@ -52,7 +56,7 @@ const setBatteryStats = (raw: string) => {
         title: "Apple Raw Current Capacity",
         value: parseInt(result[2]),
         unit: "mAh",
-        section: 2,
+        section: 3,
       });
     }
 
@@ -72,7 +76,7 @@ const setBatteryStats = (raw: string) => {
         title: "Design Capacity",
         value: parseInt(result[2]),
         unit: "mAh",
-        section: 2,
+        section: 3,
       });
     }
 
@@ -82,7 +86,7 @@ const setBatteryStats = (raw: string) => {
         title: "Nominal Charge Capacity",
         value: parseInt(result[2]),
         unit: "mAh",
-        section: 2,
+        section: 3,
       });
     }
 
@@ -101,7 +105,7 @@ const setBatteryStats = (raw: string) => {
         title: "Apple Raw Max Capacity",
         value: parseInt(result[2]),
         unit: "mAh",
-        section: 2,
+        section: 3,
       });
     }
 
@@ -130,7 +134,7 @@ const setBatteryStats = (raw: string) => {
         title: "Watts",
         value: parseInt(result[2]),
         unit: "W",
-        section: 3,
+        section: 4,
       });
     }
 
@@ -139,7 +143,7 @@ const setBatteryStats = (raw: string) => {
         id: "AppleRawAdapterDetailsName",
         title: "Adapter Name",
         value: result[2],
-        section: 3,
+        section: 4,
       });
     }
   });
