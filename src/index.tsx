@@ -4,6 +4,7 @@ import { runAppleScript } from "run-applescript";
 import { SectionItem, StatsItem } from "./types";
 import collect from "collect.js";
 import StatsListSection from "./components/StatsListSection";
+import StatsListItem from "./components/StatsListItem";
 
 type State = {
   rawStats: string;
@@ -14,7 +15,7 @@ type State = {
 const sections: SectionItem[] = [
   {
     id: 1,
-    title: "Charge Information",
+    title: "Summary",
   },
   {
     id: 2,
@@ -176,9 +177,9 @@ export default function Command() {
   });
 
   return (
-    <List isLoading={state.isLoading}>
+    <List isLoading={state.isLoading} isShowingDetail>
       {state.groupedStats.map((section) => (
-        <StatsListSection key={section.id} title={section.title} entries={section.items} />
+        <StatsListItem key={section.id} title={section.title} entries={section.items} />
       ))}
     </List>
   );
