@@ -1,135 +1,181 @@
 import { List } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { runAppleScript } from "run-applescript";
-import { BatteryStats } from "./types";
+import { SectionItem, StatsItem } from "./types";
+import collect from "collect.js";
+import StatsListSection from "./components/StatsListSection";
 
 type State = {
   rawStats: string;
-  batteryStats: BatteryStats;
+  groupedStats: SectionItem[];
+  isLoading: boolean;
 };
+
+const sections: SectionItem[] = [
+  {
+    id: 1,
+    title: "Charge Information",
+  },
+  {
+    id: 2,
+    title: "Health",
+  },
+  {
+    id: 3,
+    title: "Power Adapter",
+  },
+];
 
 const runScript = async (command: string) => {
   return await runAppleScript(`do shell script "${command}"`);
 };
 
-const parseBatteryStats = (raw: string) => {
-  let [
-    fullyCharged,
-    currentCapacity,
-    designCapacity,
-    cycleCount,
-    maxCapacity,
-    isCharging,
-    temperature,
-    watts,
-    adapterName,
-  ] = "";
+const setBatteryStats = (raw: string) => {
+  const lines = raw.split("\r");
 
-  const fullyChargedMatch = /FullyCharged.*?(\w+)$/gm.exec(raw);
-  if (fullyChargedMatch !== null && fullyChargedMatch.length === 2) {
-    fullyCharged = fullyChargedMatch[1];
-  }
+  let result = [];
+  const stats: StatsItem[] = [];
 
-  const currentCapacityMatch = /CurrentCapacity.*?(\d{4})$/gm.exec(raw);
-  if (currentCapacityMatch !== null && currentCapacityMatch.length === 2) {
-    currentCapacity = currentCapacityMatch[1];
-  }
+  lines.forEach((line: string) => {
+    if ((result = /"(FullyCharged)"\s+=\s+(\w+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Fully Charged",
+        value: result[2],
+        section: 1,
+      });
+    }
 
-  const designCapacityMatch = /DesignCapacity.*?(\d+)$/gm.exec(raw);
-  if (designCapacityMatch !== null && designCapacityMatch.length === 2) {
-    designCapacity = designCapacityMatch[1];
-  }
+    if ((result = /"(AppleRawCurrentCapacity)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Apple Raw Current Capacity",
+        value: parseInt(result[2]),
+        unit: "mAh",
+        section: 2,
+      });
+    }
 
-  const cycleCountMatch = /CycleCount".*?(\d+)$/gm.exec(raw);
-  if (cycleCountMatch !== null && cycleCountMatch.length === 2) {
-    cycleCount = cycleCountMatch[1];
-  }
+    if ((result = /"(CurrentCapacity)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Current Capacity",
+        value: parseInt(result[2]),
+        unit: "%",
+        section: 1,
+      });
+    }
 
-  const maxCapacityMatch = /MaxCapacity.*?(\d{4})$/gm.exec(raw);
-  if (maxCapacityMatch !== null && maxCapacityMatch.length === 2) {
-    maxCapacity = maxCapacityMatch[1];
-  }
+    if ((result = /"(DesignCapacity)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Design Capacity",
+        value: parseInt(result[2]),
+        unit: "mAh",
+        section: 2,
+      });
+    }
 
-  const isChargingMatch = /IsCharging.*?(\w+)$/gm.exec(raw);
-  if (isChargingMatch !== null && isChargingMatch.length === 2) {
-    isCharging = isChargingMatch[1];
-  }
+    if ((result = /"(NominalChargeCapacity)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Nominal Charge Capacity",
+        value: parseInt(result[2]),
+        unit: "mAh",
+        section: 2,
+      });
+    }
 
-  const temperatureMatch = /VirtualTemperature.*?(\w+)$/gm.exec(raw);
-  if (temperatureMatch !== null && temperatureMatch.length === 2) {
-    temperature = temperatureMatch[1];
-  }
+    if ((result = /"(CycleCount)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Cycle Count",
+        value: parseInt(result[2]),
+        section: 2,
+      });
+    }
 
-  const wattsMatch = /Watts.*?(\w+),/gm.exec(raw);
-  if (wattsMatch !== null && wattsMatch.length === 2) {
-    watts = wattsMatch[1];
-  }
+    if ((result = /"(AppleRawMaxCapacity)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Apple Raw Max Capacity",
+        value: parseInt(result[2]),
+        unit: "mAh",
+        section: 2,
+      });
+    }
 
-  const adapterNameMatch = /AdapterDetails.*Name.*?="(.*?)"/gm.exec(raw);
-  if (adapterNameMatch !== null && adapterNameMatch.length === 2) {
-    adapterName = adapterNameMatch[1];
-  }
+    if ((result = /"(IsCharging)"\s+=\s+(\w+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Is Charging",
+        value: result[2],
+        section: 1,
+      });
+    }
 
-  return {
-    fullyCharged: fullyCharged ? fullyCharged : "Unavailable",
-    currentCapacity: currentCapacity ? `${currentCapacity} mAh` : "Unavailable",
-    currentCapacityPercent: `(${Math.round((parseInt(currentCapacity) / parseInt(maxCapacity)) * 100)} %)`,
-    designCapacity: designCapacity ? `${designCapacity} mAh` : "Unavailable",
-    cycleCount: cycleCount ? cycleCount : "Unavailable",
-    maxCapacity: maxCapacity ? `${maxCapacity} mAh` : "Unavailable",
-    isCharging: isCharging ? isCharging : "Unavailable",
-    temperature: `${parseInt(temperature) / 100}° C`,
-    watts: watts ? `${watts} W` : "Not connected",
-    adapterName: adapterName ? adapterName : "Not connected",
-  };
+    if ((result = /"(VirtualTemperature)"\s+=\s+(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: result[1],
+        title: "Temperature",
+        value: parseInt(result[2]) / 100,
+        unit: "° C",
+        section: 2,
+      });
+    }
+
+    if ((result = /AppleRawAdapterDetails.*?"(Watts)"=(\d+)/.exec(line)!) !== null) {
+      stats.push({
+        id: "AppleRawAdapterDetailsWatts",
+        title: "Watts",
+        value: parseInt(result[2]),
+        unit: "W",
+        section: 3,
+      });
+    }
+
+    if ((result = /AppleRawAdapterDetails.*?"(Name)"="(.*?)"/.exec(line)!) !== null) {
+      stats.push({
+        id: "AppleRawAdapterDetailsName",
+        title: "Adapter Name",
+        value: result[2],
+        section: 3,
+      });
+    }
+  });
+
+  return stats;
 };
 
 export default function Command() {
   const [state, setState] = useState<State>({
     rawStats: "",
-    batteryStats: {
-      fullyCharged: "",
-      currentCapacity: "",
-      currentCapacityPercent: "",
-      designCapacity: "",
-      cycleCount: "",
-      maxCapacity: "",
-      isCharging: "",
-      temperature: "",
-      watts: "",
-      adapterName: "",
-    },
+    groupedStats: [],
+    isLoading: true,
   });
 
   useEffect(() => {
     (async () => {
       const raw = await runScript("/usr/sbin/ioreg -l -n AppleSmartBattery -r");
-      const batteryStats = parseBatteryStats(raw);
+      const stats = setBatteryStats(raw);
+      const statsBySections = collect(stats).groupBy("section");
 
-      setState((previous) => ({ ...previous, rawStats: raw, batteryStats: batteryStats }));
+      const groupedStats: SectionItem[] = statsBySections
+        .map((sectionCollection: any, index) => {
+          const section = sections[index - 1];
+          return { id: section.id, title: section.title, items: sectionCollection.all() };
+        })
+        .toArray();
+
+      setState((previous) => ({ ...previous, rawStats: raw, groupedStats: groupedStats, isLoading: false }));
     })();
   });
 
   return (
-    <List>
-      <List.Section title="Charge Information">
-        <List.Item title="Is charging" subtitle={state.batteryStats.isCharging} />
-        <List.Item title="Fully charged" subtitle={state.batteryStats.fullyCharged} />
-        <List.Item
-          title="Current Charge"
-          subtitle={`${state.batteryStats.currentCapacity} ${state.batteryStats.currentCapacityPercent}`}
-        />
-      </List.Section>
-      <List.Section title="Health">
-        <List.Item title="Temperature" subtitle={state.batteryStats.temperature} />
-        <List.Item title="Design Capacity" subtitle={state.batteryStats.designCapacity} />
-        <List.Item title="Full Charge Capacity" subtitle={state.batteryStats.maxCapacity} />
-        <List.Item title="Cycle Count" subtitle={state.batteryStats.cycleCount} />
-      </List.Section>
-      <List.Section title="Power Adapter">
-        <List.Item title="Adapter Name" subtitle={state.batteryStats.adapterName} />
-        <List.Item title="Watts" subtitle={state.batteryStats.watts} />
-      </List.Section>
+    <List isLoading={state.isLoading}>
+      {state.groupedStats.map((section) => (
+        <StatsListSection key={section.id} title={section.title} entries={section.items} />
+      ))}
     </List>
   );
 }

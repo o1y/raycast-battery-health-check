@@ -1,14 +1,15 @@
-interface BatteryStats {
-  fullyCharged: string;
-  currentCapacity: string;
-  currentCapacityPercent: string;
-  designCapacity: string;
-  cycleCount: string;
-  maxCapacity: string;
-  isCharging: string;
-  temperature: string;
-  watts: string;
-  adapterName: string;
+interface StatsItem {
+  id: string;
+  title: string;
+  value: string | number;
+  unit?: string;
+  section: number;
 }
 
-export type { BatteryStats };
+interface SectionItem {
+  id: number;
+  title: string;
+  items?: StatsItem[];
+}
+
+export type { StatsItem, SectionItem };
