@@ -41,7 +41,7 @@ export default function Command() {
       {!state.isLoading ? (
         <>
           <TimeRemainingItem timeRemaining={state.batteryRegistry["TimeRemaining"]} />
-          <PercentageItem value={state.batteryRegistry["CurrentCapacity"]} />
+          <PercentageItem percentage={state.batteryRegistry["CurrentCapacity"]} />
           <PowerUsageItem voltage={state.batteryRegistry["Voltage"]} amperage={state.batteryRegistry["Amperage"]} />
           <ConditionItem pfStatus={state.batteryRegistry["PermanentFailureStatus"]} />
           <ChargeItem
