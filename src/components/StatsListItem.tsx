@@ -1,19 +1,17 @@
-import { List } from "@raycast/api";
-import { StatsItem } from "../types";
-import StatsListItemDetail from "./StatsListItemDetail";
+import { Action, ActionPanel, List } from "@raycast/api";
 
-const StatsListItem = (props: { title: string; entries?: StatsItem[] }) => {
-  const description = `
-  # ${props.title}
-
-  Here comes a description ...
-  `;
-  return props.entries ? (
+const StatsListItem = (props: { label: string; value: string }) => {
+  return (
     <List.Item
-      title={props.title}
-      detail={<StatsListItemDetail description={description} entries={props.entries}></StatsListItemDetail>}
+      title={props.label}
+      subtitle={props.value}
+      actions={
+        <ActionPanel>
+          <Action.CopyToClipboard title={`Copy ${props.label}`} content={props.value} />
+        </ActionPanel>
+      }
     />
-  ) : null;
+  );
 };
 
 export default StatsListItem;

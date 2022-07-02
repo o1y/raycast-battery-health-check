@@ -23,12 +23,15 @@
   },
   "devDependencies": {
     "@types/node": "~16.10.0",
+    "@types/plist": "^3.0.2",
     "@types/react": "^17.0.28",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "collect.js": "^4.34.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "execa": "^6.1.0",
+    "plist": "^3.0.5",
     "prettier": "^2.5.1",
     "run-applescript": "^6.0.0",
     "typescript": "^4.4.3"
