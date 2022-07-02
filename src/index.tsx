@@ -52,7 +52,7 @@ export default function Command() {
           />
           <CycleCountItem cycles={state.batteryRegistry["CycleCount"]} />
           <PowerSourceItem
-            isCharging={state.batteryRegistry["IsCharging"]}
+            externalConnected={state.batteryRegistry["ExternalConnected"]}
             adapter={state.batteryRegistry["AdapterDetails"]}
           />
           <TemperatureItem temperature={state.batteryRegistry["Temperature"]} />

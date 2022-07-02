@@ -7,7 +7,7 @@ const TimeRemainingItem = (props: { timeRemaining: number }) => {
   });
 
   const formatted =
-    props.timeRemaining !== undefined && props.timeRemaining !== 65535 && props.timeRemaining !== 0
+    props.timeRemaining !== undefined && props.timeRemaining < 1500 && props.timeRemaining !== 0
       ? `${hoursRemaining}:${minutesRemaining}`
       : "--";
 
