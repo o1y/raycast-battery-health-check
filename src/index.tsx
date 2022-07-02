@@ -8,6 +8,8 @@ import PowerUsageItem from "./components/PowerUsageItem";
 import CycleCountItem from "./components/CycleCountItem";
 import TemperatureItem from "./components/TemperatureItem";
 import ChargeItem from "./components/ChargeItem";
+import PowerSourceItem from "./components/PowerSourceItem";
+import ConditionItem from "./components/ConditionItem";
 
 type State = {
   batteryRegistry: any;
@@ -41,6 +43,7 @@ export default function Command() {
           <TimeRemainingItem value={state.batteryRegistry["TimeRemaining"]} />
           <PercentageItem value={state.batteryRegistry["CurrentCapacity"]} />
           <PowerUsageItem voltage={state.batteryRegistry["Voltage"]} amperage={state.batteryRegistry["Amperage"]} />
+          <ConditionItem pfStatus={state.batteryRegistry["PermanentFailureStatus"]} />
           <ChargeItem
             currentCapacity={
               state.batteryRegistry["AppleRawCurrentCapacity"] || state.batteryRegistry["CurrentCapacity"]
@@ -48,6 +51,10 @@ export default function Command() {
             maxCapacity={state.batteryRegistry["AppleRawMaxCapacity"] || state.batteryRegistry["MaxCapacity"]}
           />
           <CycleCountItem cycles={state.batteryRegistry["CycleCount"]} />
+          <PowerSourceItem
+            isCharging={state.batteryRegistry["IsCharging"]}
+            adapter={state.batteryRegistry["AdapterDetails"]}
+          />
           <TemperatureItem temperature={state.batteryRegistry["Temperature"]} />
         </>
       ) : null}
