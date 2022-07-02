@@ -161,26 +161,36 @@ export default function Command() {
 
   useEffect(() => {
     (async () => {
-      const raw = await runScript("/usr/sbin/ioreg -l -n AppleSmartBattery -r");
-      const stats = setBatteryStats(raw);
-      const statsBySections = collect(stats).groupBy("section");
+      let raw = "";
 
-      const groupedStats: SectionItem[] = statsBySections
-        .map((sectionCollection: any, index) => {
-          const section = sections[index - 1];
-          return { id: section.id, title: section.title, items: sectionCollection.all() };
-        })
-        .toArray();
+      try {
+        raw = await runScript("/usr/sbin/ioreg -l -n AppleSmartBattery -r");
+      } catch (e) {
+        setState((previous) => ({ ...previous, isLoading: false }));
+        return false;
+      }
 
-      setState((previous) => ({ ...previous, rawStats: raw, groupedStats: groupedStats, isLoading: false }));
+      if (raw !== "") {
+        const stats = setBatteryStats(raw);
+        const statsBySections = collect(stats).groupBy("section");
+  
+        const groupedStats: SectionItem[] = statsBySections
+          .map((sectionCollection: any, index) => {
+            const section = sections[index - 1];
+            return { id: section.id, title: section.title, items: sectionCollection.all() };
+          })
+          .toArray();
+  
+        setState((previous) => ({ ...previous, rawStats: raw, groupedStats: groupedStats, isLoading: false }));
+      }
     })();
   });
 
   return (
     <List isLoading={state.isLoading} isShowingDetail>
-      {state.groupedStats.map((section) => (
-        <StatsListItem key={section.id} title={section.title} entries={section.items} />
-      ))}
-    </List>
+    {state.groupedStats.map((section) => (
+      <StatsListItem key={section.id} title={section.title} entries={section.items} />
+    ))}
+  </List>  
   );
 }
