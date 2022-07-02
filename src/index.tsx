@@ -40,7 +40,7 @@ export default function Command() {
     <List isLoading={state.isLoading}>
       {!state.isLoading ? (
         <>
-          <TimeRemainingItem value={state.batteryRegistry["TimeRemaining"]} />
+          <TimeRemainingItem timeRemaining={state.batteryRegistry["TimeRemaining"]} />
           <PercentageItem value={state.batteryRegistry["CurrentCapacity"]} />
           <PowerUsageItem voltage={state.batteryRegistry["Voltage"]} amperage={state.batteryRegistry["Amperage"]} />
           <ConditionItem pfStatus={state.batteryRegistry["PermanentFailureStatus"]} />

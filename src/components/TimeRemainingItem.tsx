@@ -1,14 +1,17 @@
 import StatsListItem from "./StatsListItem";
 
-const TimeRemainingItem = (props: { value: number }) => {
-  const hoursRemaining = Math.floor(props.value / 60);
-  const minutesRemaining = (props.value % 60).toLocaleString("en-US", {
+const TimeRemainingItem = (props: { timeRemaining: number }) => {
+  const hoursRemaining = Math.floor(props.timeRemaining / 60);
+  const minutesRemaining = (props.timeRemaining % 60).toLocaleString("en-US", {
     minimumIntegerDigits: 2,
   });
 
-  const timeRemaining = `${hoursRemaining}:${minutesRemaining}`;
+  const formatted =
+    props.timeRemaining !== undefined && props.timeRemaining !== 65535 && props.timeRemaining !== 0
+      ? `${hoursRemaining}:${minutesRemaining}`
+      : "--";
 
-  return <StatsListItem label="Time Remaining" value={timeRemaining} />;
+  return <StatsListItem label="Time Remaining" value={formatted} />;
 };
 
 export default TimeRemainingItem;
