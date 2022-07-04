@@ -33,7 +33,6 @@
     "execa": "^6.1.0",
     "plist": "^3.0.5",
     "prettier": "^2.5.1",
-    "run-applescript": "^6.0.0",
     "typescript": "^4.4.3"
   },
   "scripts": {
