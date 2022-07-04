@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "battery-health-check",
-  "title": "Battery Health Check - List your Mac Battery Health Data",
-  "description": "List live information about the battery in your Mac",
+  "title": "Battery",
+  "description": "Show live information about the battery in your Mac!",
   "icon": "battery-icon.png",
   "author": "o1y",
   "categories": [
@@ -13,8 +13,8 @@
   "commands": [
     {
       "name": "index",
-      "title": "List Battery Information",
-      "description": "List live information about the battery in your Mac.",
+      "title": "Show Battery Information",
+      "description": "Shows current battery health data.",
       "mode": "view"
     }
   ],
