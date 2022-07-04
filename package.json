@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "battery-health-check",
-  "title": "Battery",
-  "description": "Show live information about the battery in your Mac!",
+  "name": "battery-health",
+  "title": "Battery Health",
+  "description": "Shows live information about the battery in your Mac!",
   "icon": "battery-icon.png",
   "author": "o1y",
   "categories": [
