@@ -25,26 +25,34 @@ export default function Command() {
     isLoading: true,
   });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { stdout } = await execa("/usr/sbin/ioreg", ["-arn", "AppleSmartBattery"]);
-        const { stdout: battery } = await execa("/usr/sbin/system_profiler", ["SPPowerDataType", "-xml"]);
-        const ioreg: any = plist.parse(stdout);
-        const sysProfiler: any = plist.parse(battery);
-        const batteryRegistry = ioreg[0];
-        const batteryInfo = sysProfiler[0];
+  const setBatteryHealthData = async () => {
+    try {
+      const { stdout } = await execa("/usr/sbin/ioreg", ["-arn", "AppleSmartBattery"]);
+      const { stdout: battery } = await execa("/usr/sbin/system_profiler", ["SPPowerDataType", "-xml"]);
+      const ioreg: any = plist.parse(stdout);
+      const sysProfiler: any = plist.parse(battery);
+      const batteryRegistry = ioreg[0];
+      const batteryInfo = sysProfiler[0];
 
-        setState((previous) => ({
-          ...previous,
-          batteryRegistry: batteryRegistry,
-          batteryInfo: batteryInfo,
-          isLoading: false,
-        }));
-      } catch (e) {
-        setState((previous) => ({ ...previous, isLoading: false }));
-      }
-    })();
+      setState((previous) => ({
+        ...previous,
+        batteryRegistry: batteryRegistry,
+        batteryInfo: batteryInfo,
+        isLoading: false,
+      }));
+    } catch (e) {
+      setState((previous) => ({ ...previous, isLoading: false }));
+    }
+  };
+
+  useEffect(() => {
+    setBatteryHealthData();
+
+    const updateInterval = setInterval(() => {
+      setBatteryHealthData();
+    }, 1000);
+
+    return () => clearInterval(updateInterval);
   }, []);
 
   return (
