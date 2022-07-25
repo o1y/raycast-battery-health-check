@@ -10,7 +10,8 @@ import TemperatureItem from "./components/TemperatureItem";
 import ChargeItem from "./components/ChargeItem";
 import PowerSourceItem from "./components/PowerSourceItem";
 import ConditionItem from "./components/ConditionItem";
-import BatteryHealthItem from "./components/BatteryHealthItem";
+import MaxCapacityItem from "./components/MaxCapacityItem";
+("./components/MaxCapacityItem");
 
 type State = {
   batteryRegistry: any;
@@ -62,7 +63,7 @@ export default function Command() {
             maxCapacity={state.batteryRegistry["AppleRawMaxCapacity"] || state.batteryRegistry["MaxCapacity"]}
           />
           <CycleCountItem cycles={state.batteryRegistry["CycleCount"]} />
-          <BatteryHealthItem
+          <MaxCapacityItem
             health={
               state.batteryInfo["_items"][0]["sppower_battery_health_info"]["sppower_battery_health_maximum_capacity"]
             }
