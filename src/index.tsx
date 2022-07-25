@@ -11,7 +11,6 @@ import ChargeItem from "./components/ChargeItem";
 import PowerSourceItem from "./components/PowerSourceItem";
 import ConditionItem from "./components/ConditionItem";
 import MaxCapacityItem from "./components/MaxCapacityItem";
-("./components/MaxCapacityItem");
 
 type State = {
   batteryRegistry: any;
