@@ -14,12 +14,18 @@
     {
       "name": "index",
       "title": "Show Battery Information",
-      "description": "Shows current battery health data.",
+      "description": "Shows current battery health data",
       "mode": "view"
+    },
+    {
+      "name": "menu",
+      "title": "Battery Health",
+      "description": "Shows current battery health data",
+      "mode": "menu-bar"
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.36.1"
+    "@raycast/api": "^1.38.2"
   },
   "devDependencies": {
     "@types/node": "~16.10.0",
