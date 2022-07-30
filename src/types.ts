@@ -12,4 +12,19 @@ interface SectionItem {
   items?: StatsItem[];
 }
 
-export type { StatsItem, SectionItem };
+interface BatteryData {
+  timeRemaining: number;
+  percentage: number;
+  voltage: number;
+  amperage: number;
+  pfStatus: number;
+  currentCapacity: number;
+  maxCapacity: number;
+  cycleCount: number;
+  healthMaxCapacity: string;
+  externalConnected: boolean;
+  adapterDetails: string;
+  temperature: number;
+}
+
+export type { BatteryData, StatsItem, SectionItem };

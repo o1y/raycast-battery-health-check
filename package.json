@@ -21,6 +21,7 @@
       "name": "menu",
       "title": "Battery Health",
       "description": "Shows current battery health data",
+      "interval": "1m",
       "mode": "menu-bar"
     }
   ],
