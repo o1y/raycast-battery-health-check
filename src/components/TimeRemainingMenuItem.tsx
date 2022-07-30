@@ -12,15 +12,16 @@ const TimeRemainingMenuItem = (props: { timeRemaining: number; externalConnected
   };
 
   const getTitle = () => {
-    const label = props.externalConnected ? `until charged` : "remaining";
+    let label = props.externalConnected ? ` until charged` : " remaining";
+    label = props.timeRemaining === 0 ? `Battery fully charged` : label;
 
-    return `${hoursRemaining()}${minutesRemaining()} ${label}`;
+    return `${hoursRemaining()}${minutesRemaining()}${label}`;
   };
 
   return (
-    (props.timeRemaining !== undefined && props.timeRemaining < 1500 && props.timeRemaining !== 0 && (
-      <MenuBarExtra.Item title={getTitle()} />
-    )) || <></>
+    (props.timeRemaining !== undefined && props.timeRemaining < 1500 && <MenuBarExtra.Item title={getTitle()} />) || (
+      <></>
+    )
   );
 };
 
