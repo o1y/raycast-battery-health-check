@@ -64,7 +64,9 @@ export default function Command() {
           <CycleCountItem cycles={state.batteryRegistry["CycleCount"]} />
           <MaxCapacityItem
             health={
-              state.batteryInfo["_items"][0]["sppower_battery_health_info"]["sppower_battery_health_maximum_capacity"]
+              state.batteryInfo["_items"]?.[0]?.["sppower_battery_health_info"]?.[
+                "sppower_battery_health_maximum_capacity"
+              ]
             }
           />
           <PowerSourceItem
